@@ -13,6 +13,8 @@ INPUT_SIZE = 784
 OUTPUT_SIZE = 10
 
 def main(_):
+
+        display_step = 5
         # log_files_path = './summary_dir' if hvd.rank() == 0 else None
         # Horovod: initialize Horovod.
         hvd.init()
@@ -54,6 +56,8 @@ def main(_):
 
         global_step = tf.contrib.framework.get_or_create_global_step()
         train_op = opt.minimize(loss, global_step=global_step)
+        eval_op = model.evaluate(output, y)
+
         log_files_path = './summary_dir' if hvd.rank() == 0 else None
         summary_op = tf.summary.merge_all()
         hooks = [
@@ -87,11 +91,22 @@ def main(_):
         # or an error occurs.
         with tf.train.MonitoredTrainingSession(checkpoint_dir=checkpoint_dir,
                                                hooks=hooks,
-                                               config=config) as mon_sess:
-            while not mon_sess.should_stop():
+                                               config=config) as sess:
+            loss_trace = []
+            while not sess.should_stop():
                 # Run a training step synchronously.
                 image_, label_ = mnist.train.next_batch(100)
-                mon_sess.run(train_op, feed_dict={image: image_, label: label_})
+                _, step = sess.run([train_op, global_step], feed_dict={image: image_, label: label_})
+
+                if hvd.rank() == 0 and step%display_step==0:
+                    accuracy = sess.run(eval_op, feed_dict={image: mnist.validation.images, label: mnist.validation.labels})
+                    # accuracy = sess.run(eval_op, feed_dict={x: dataset.validation_inputs, y: dataset.validation_labels})
+                    loss_trace.append(1 - accuracy)
+                    print(
+                        "Epoch:", '%03d' % (step + 1),
+                        " Validation Error:",
+                        (1.0 - accuracy))
+
 
 if __name__ == "__main__":
         tf.app.run()
