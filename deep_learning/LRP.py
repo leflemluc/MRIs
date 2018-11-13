@@ -1,9 +1,7 @@
 import tensorflow as tf
-import numpy as np
 import time
-from utils.pickles import _read_pickle_, randomize
 from utils.heatmap import visualize, heatmap
-from deep_learning.simple_regression import SimpleRegression
+from deep_learning.label_prediction.simple_regression import SimpleRegression
 from tensorflow.examples.tutorials.mnist import input_data
 from utils.get_image_mnist import gen_image
 

@@ -6,4 +6,4 @@ def image_summary(label, tensor, shape_2D):
     # Outputs a Summary protocol buffer with images.
 
     tensor_reshaped = tf.reshape(tensor, [-1, shape_2D[0], shape_2D[1], 1])
-    return tf.summary.image(label, tensor_reshaped)
+    return tf.summary.image(label, tensor_reshaped, max_outputs=3)

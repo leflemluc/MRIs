@@ -95,14 +95,18 @@ if __name__=='__main__':
     #PATH = "/Users/lucleflem/Desktop/Ali/data/NACC/mri7472_PU_Sag_FSPGR_BRAVO_20170925083746_300.nii.gz"
     #PATH = "/Users/lucleflem/Desktop/Ali/data/NACC/mri7472_PU_Sag_FSPGR_BRAVO_20170925083746_1300.nii.gz"
     PATH = sys.argv[1]
+
+    """
     save_movie_name = sys.argv[2]
  
-    #display(PATH)
     display_movie_x(PATH, "/Users/lucleflem/Desktop/Ali/images/" + save_movie_name + "_cut_x.mp4",
                     save_movie_name + "_cut_x")
     display_movie_y(PATH, "/Users/lucleflem/Desktop/Ali/images/" + save_movie_name + "_cut_y.mp4",
                     save_movie_name + "_cut_y")
     display_movie_z(PATH, "/Users/lucleflem/Desktop/Ali/images/" + save_movie_name + "_cut_z.mp4",
                     save_movie_name + "_cut_z")
+                    
+    """
 
-    #plt.show()
+    display(PATH)
+    plt.show()
